@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Towel demo frame</title>
+<style>
+  :root { --rows: 18; --row: 34px; --caption: 112px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; background: #16191d; }
+  #terminal {
+    position: absolute; left: 0; top: 0; width: 1280px; height: calc(800px - var(--caption));
+    padding: 38px 56px 0;
+    font: 24px/var(--row) "SF Mono", Menlo, Monaco, Consolas, monospace;
+    color: #d5dae0;
+    font-variant-ligatures: none;
+  }
+  #window { height: calc(var(--rows) * var(--row)); overflow: hidden; }
+  #lines { will-change: transform; }
+  .line { height: var(--row); white-space: pre; padding-left: 10px; margin-left: -10px; border-left: 3px solid transparent; }
+  .prompt { color: #8b949e; }
+  .meta { color: #8b949e; }
+  .hunk { color: #7db7f5; }
+  .add { color: #8ee6b0; background: rgba(46, 160, 67, .16); }
+  .del { color: #ffa198; background: rgba(248, 81, 73, .13); }
+  .dup { background: rgba(125, 183, 245, .16); border-left-color: #7db7f5; }
+  .mark { outline: 2px solid #f2cc60; outline-offset: 1px; border-radius: 4px; }
+  .cursor { display: inline-block; width: .58em; height: 1.05em; vertical-align: -.18em; background: #d5dae0; }
+  #caption {
+    position: absolute; left: 0; bottom: 0; width: 1280px; height: var(--caption);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0 90px; background: #0d1013; border-top: 1px solid #2a3037;
+    font: 500 25px/1.35 -apple-system, "Helvetica Neue", Arial, sans-serif; color: #f0f3f6;
+    text-wrap: balance;
+  }
+</style>
+</head>
+<body>
+<div id="terminal"><div id="window"><div id="lines"></div></div></div>
+<div id="caption"></div>
+<script>
+// A frame is a pure function of time: renderAt(t) draws the terminal as it
+// stands t seconds in. The recorder calls it once per frame.
+const ROWS = 18;
+const ROW_PX = 34;
+const TYPING_CPS = 14;
+const PROMPT = '$ ';
+
+let timeline = null;
+
+function setCapture(capture) {
+  const first = `cat ${capture.file}`;
+  const second = capture.command;
+  const source = capture.source.replace(/\n$/, '').split('\n');
+  const output = capture.output.replace(/\n$/, '').split('\n');
+
+  const t = {};
+  t.type1 = 0.5;
+  t.enter1 = t.type1 + first.length / TYPING_CPS + 0.25;
+  t.type2 = t.enter1 + 6.0;
+  t.enter2 = t.type2 + second.length / TYPING_CPS + 0.25;
+  t.output = t.enter2 + capture.seconds;          // the wait is the measured run time
+  t.scrollUp = t.output + 0.9;
+  t.holdTop = t.scrollUp + 0.9;
+  t.scrollDown = t.holdTop + 6.5;
+  t.holdBottom = t.scrollDown + 0.9;
+  t.end = t.holdBottom + 6.0;
+
+  // The duplicated lines are the ones the diff removes.
+  const removed = new Set(output.filter(l => l.startsWith('-') && !l.startsWith('---')).map(l => l.slice(1)));
+  timeline = { t, first, second, source, output, removed };
+  return { duration: t.end, poster: t.holdTop + 1.0 };
+}
+
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function marked(text, pattern) {
+  // Escape the text, wrapping each match of `pattern` in a highlight.
+  if (!pattern) return esc(text);
+  let out = '', last = 0;
+  for (const m of text.matchAll(pattern)) {
+    out += esc(text.slice(last, m.index)) + `<span class="mark">${esc(m[0])}</span>`;
+    last = m.index + m[0].length;
+  }
+  return out + esc(text.slice(last));
+}
+
+function typed(command, start, now) {
+  return command.slice(0, Math.max(0, Math.floor((now - start) * TYPING_CPS)));
+}
+
+function ease(x) { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); }
+
+function outputClass(line) {
+  if (line.startsWith('+++') || line.startsWith('---')) return 'meta';
+  if (line.startsWith('@@')) return 'hunk';
+  if (line.startsWith('+')) return 'add';
+  if (line.startsWith('-')) return 'del';
+  return '';
+}
+
+function renderAt(now) {
+  const { t, first, second, source, output, removed } = timeline;
+  const cursor = '<span class="cursor"></span>';
+  const blink = Math.floor(now * 2) % 2 === 0 ? cursor : '';
+  const prompt = `<span class="prompt">${PROMPT}</span>`;
+  const rows = [];
+  const push = (html, cls = '') => rows.push(`<div class="line ${cls}">${html}</div>`);
+
+  // Command 1 and its output.
+  if (now < t.enter1) {
+    push(prompt + esc(typed(first, t.type1, now)) + cursor);
+  } else {
+    push(prompt + esc(first));
+    const annotate = now >= t.enter1 + 1.0 && now < t.type2;
+    for (const line of source) {
+      const dup = annotate && removed.has(line);
+      // The one place the two blocks differ: the length each compares against.
+      push(marked(line, dup ? /(?<=< )\d+/g : null) || ' ', dup ? 'dup' : '');
+    }
+  }
+
+  // Command 2, the wait, and its output.
+  let secondRow = -1;
+  if (now >= t.enter1) {
+    secondRow = rows.length;
+    if (now < t.enter2) {
+      const text = now >= t.type2 ? typed(second, t.type2, now) : '';
+      push(prompt + esc(text) + (now >= t.type2 ? cursor : blink));
+    } else {
+      push(prompt + esc(second));
+      if (now < t.output) {
+        push(blink || ' ');
+      } else {
+        const top = now >= t.scrollUp && now < t.scrollDown;
+        for (const line of output) {
+          const cls = outputClass(line);
+          let pattern = null;
+          if (cls === 'add' && top) pattern = /__param_1/g;
+          if (cls === 'add' && !top && now >= t.holdBottom) pattern = /(?<=, )\d+(?=\)$)/g;
+          push(marked(line, pattern) || ' ', cls);
+        }
+        push(prompt + blink);
+      }
+    }
+  }
+
+  // The view follows the bottom, as a terminal does, except while scrolled back.
+  const bottom = Math.max(0, rows.length - ROWS);
+  let viewTop = bottom;
+  if (now >= t.scrollUp) {
+    const up = ease((now - t.scrollUp) / (t.holdTop - t.scrollUp));
+    const down = ease((now - t.scrollDown) / (t.holdBottom - t.scrollDown));
+    viewTop = bottom + (secondRow - bottom) * (up - down);
+  }
+  const lines = document.getElementById('lines');
+  lines.innerHTML = rows.join('');
+  lines.style.transform = `translateY(${-viewTop * ROW_PX}px)`;
+
+  let caption = '';
+  if (now >= t.enter1 + 1.0 && now < t.type2) {
+    caption = 'Two functions repeat the same checks. Only the minimum length differs.';
+  } else if (now >= t.type2 && now < t.scrollUp) {
+    caption = 'towel preview runs the whole refactoring on a disposable copy and verifies the result. Your files are not touched.';
+  } else if (now >= t.scrollUp && now < t.scrollDown) {
+    caption = 'The repeated block becomes one helper. The value that differed becomes a parameter.';
+  } else if (now >= t.scrollDown) {
+    caption = 'Each copy becomes a call that passes its own value. You choose the names afterwards.';
+  }
+  document.getElementById('caption').textContent = caption;
+}
+</script>
+</body>
+</html>

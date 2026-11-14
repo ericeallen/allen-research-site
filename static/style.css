@@ -1,0 +1,186 @@
+/* allen-research.com
+   Shares its type and palette with blog.allen-research.com: Charter for text,
+   the system sans for headings and labels, one blue for links. No scripts,
+   no web fonts, no images in the chrome. */
+
+:root {
+  color-scheme: light dark;
+  --bg: #fff;
+  --text: #1f2328;
+  --heading: #16191d;
+  --muted: #57606a;
+  --rule: #e4e6ea;
+  --link: #0b5cad;
+  --tint: #eef2f8;
+  --serif: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, Cambria, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --measure: 42rem;
+  --gutter: 5.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111417;
+    --text: #d5dae0;
+    --heading: #f0f3f6;
+    --muted: #9aa4af;
+    --rule: #2a3037;
+    --link: #7db7f5;
+    --tint: #1a2330;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 18px/1.65 var(--serif);
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--link); text-decoration-thickness: .06em; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: .12em; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+
+img { max-width: 100%; height: auto; }
+
+.skip {
+  position: absolute; left: -999rem; top: 0;
+  background: var(--bg); padding: .5rem .9rem; font: 600 .9rem var(--sans); z-index: 1;
+}
+.skip:focus { left: .5rem; top: .5rem; }
+
+/* ---- Chrome ------------------------------------------------------------ */
+
+.site-header, main, .site-footer {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .35rem 1.5rem;
+  padding-top: 1.6rem;
+  padding-bottom: 1.1rem;
+  font-family: var(--sans);
+}
+.site-name { font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; color: var(--heading); text-decoration: none; }
+.site-header nav ul { display: flex; flex-wrap: wrap; gap: .2rem 1.35rem; list-style: none; margin: 0; padding: 0; }
+.site-header nav a { font-size: .93rem; color: var(--muted); text-decoration: none; padding: .35rem 0; display: inline-block; }
+.site-header nav a:hover { color: var(--heading); text-decoration: underline; }
+.site-header nav a[aria-current="page"] { color: var(--heading); font-weight: 600; box-shadow: 0 2px 0 var(--heading); }
+
+main { padding-top: 2.4rem; padding-bottom: 3.5rem; }
+
+.site-footer {
+  padding-bottom: 2.6rem;
+  font: .84rem/1.6 var(--sans);
+  color: var(--muted);
+}
+.site-footer::before { content: ""; display: block; border-top: 1px solid var(--rule); margin-bottom: 1.4rem; }
+.site-footer p { margin: 0; }
+.site-footer .links { margin: .1rem 0 .6rem; font-size: inherit; }
+.site-footer a { color: inherit; }
+
+/* ---- Type -------------------------------------------------------------- */
+
+h1, h2, h3 { font-family: var(--sans); color: var(--heading); letter-spacing: -.012em; }
+h1 { font-size: 2.3rem; line-height: 1.12; font-weight: 750; margin: 0 0 .6rem; }
+h2 { font-size: 1.28rem; line-height: 1.25; font-weight: 700; margin: 3rem 0 .5rem; padding-bottom: .45rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.02rem; line-height: 1.35; font-weight: 650; margin: 0; letter-spacing: 0; }
+p { margin: 0 0 1.05rem; }
+
+.lede { color: var(--muted); font-size: 1.04rem; margin-bottom: 0; }
+.more { font: .9rem var(--sans); margin: .9rem 0 0; }
+.label { font: .82rem/1.5 var(--sans); color: var(--muted); }
+
+.badge {
+  display: inline-block; vertical-align: .08em; margin-left: .35rem;
+  font: 600 .7rem/1 var(--sans); letter-spacing: .02em;
+  color: var(--link); background: var(--tint); border-radius: 999px; padding: .28rem .55rem;
+}
+
+.links { display: flex; flex-wrap: wrap; gap: 0 1.1rem; list-style: none; margin: .2rem 0 0; padding: 0; font: .88rem var(--sans); }
+
+/* ---- Home -------------------------------------------------------------- */
+
+.intro { display: grid; grid-template-columns: 1fr 10.5rem; gap: 2.2rem; align-items: start; }
+.intro .tagline { font: 1.02rem/1.4 var(--sans); color: var(--muted); margin: 0 0 1.3rem; text-wrap: balance; }
+.intro img { display: block; width: 100%; border-radius: 6px; margin-top: .35rem; }
+.intro .links { margin-top: .85rem; font-size: .93rem; }
+.intro p:last-of-type { margin-bottom: 0; }
+
+@media (max-width: 36rem) {
+  .intro { grid-template-columns: 1fr; gap: 1.3rem; }
+  .intro figure, .intro picture, .intro img { order: -1; }
+  .intro img { width: 7.5rem; }
+  h1 { font-size: 1.95rem; }
+}
+
+/* ---- Dated entries: publications, positions, talks ------------------- */
+
+.entries { list-style: none; margin: 0; padding: 0; }
+.entry {
+  display: grid;
+  grid-template-columns: var(--gutter) 1fr;
+  column-gap: 1.1rem;
+  padding: .72rem 0;
+}
+.entry + .entry { border-top: 1px solid var(--rule); }
+.entry-when { font: .84rem/1.9 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.entry-body { min-width: 0; font-size: .96rem; line-height: 1.55; }
+.entry-body p { margin: .2rem 0 0; }
+.entry-title { font: 650 1rem/1.4 var(--sans); color: var(--heading); margin: 0; }
+.entry-title a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 30%, transparent); }
+.entry-title a:hover { color: var(--link); text-decoration-color: currentColor; }
+.entry-meta { color: var(--muted); }
+.entry-org { font: 700 .8rem/1.5 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--heading); margin: 0 0 .1rem; }
+.entry .links { margin-top: .05rem; font-size: .84rem; }
+.entry.continued { border-top: 0; padding-top: 0; }
+
+@media (max-width: 36rem) {
+  .entry { grid-template-columns: 1fr; }
+  .entry-when { line-height: 1.5; }
+}
+
+/* ---- Software ---------------------------------------------------------- */
+
+.project { padding: 1.9rem 0 .4rem; }
+.project + .project { border-top: 1px solid var(--rule); }
+.project h2 { border: 0; margin: 0; padding: 0; font-size: 1.5rem; }
+.project .tagline { font: 1rem/1.45 var(--sans); color: var(--muted); margin: .25rem 0 1rem; }
+.project .links { margin: -.3rem 0 1.1rem; font-size: .92rem; }
+.project figure { margin: 0 0 1.3rem; }
+.project figure img { display: block; border-radius: 4px; }
+.project figure video { display: block; width: 100%; height: auto; border-radius: 6px; background: #16191d; }
+figcaption { font: .82rem/1.5 var(--sans); color: var(--muted); margin-top: .5rem; }
+
+/* ---- Contents line under a page title ---------------------------------- */
+
+.toc { font: .9rem var(--sans); margin: .75rem 0 0; }
+.toc ul { display: flex; flex-wrap: wrap; gap: .1rem 1.1rem; list-style: none; margin: 0; padding: 0; }
+
+/* Small links still get a 24px touch target. */
+.toc a, .links a { display: inline-block; padding: .28rem 0; }
+
+/* ---- Print: the CV should print as a CV -------------------------------- */
+
+@media print {
+  :root { --bg: #fff; --text: #000; --heading: #000; --muted: #333; --rule: #bbb; --link: #000; }
+  body { font-size: 10.5pt; }
+  .site-header nav, .skip, .toc, .site-footer .links { display: none; }
+  .site-header, main, .site-footer { max-width: none; padding-left: 0; padding-right: 0; }
+  main { padding-top: 0; }
+  a { text-decoration: none; }
+  h2 { margin-top: 1.6rem; break-after: avoid; }
+  .entry { break-inside: avoid; padding: .4rem 0; }
+}

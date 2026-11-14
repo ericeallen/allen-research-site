@@ -1,0 +1,8 @@
+{
+  "version": "towel 1.949",
+  "file": "accounts.py",
+  "source": "def register_user(form):\n    user = dict(form)\n    if not user.get(\"name\"):\n        raise ValueError(\"name is required\")\n    if len(user[\"name\"]) < 2:\n        raise ValueError(\"name is too short\")\n    return save(user)\n\n\ndef register_admin(form):\n    admin = dict(form, role=\"admin\")\n    if not admin.get(\"name\"):\n        raise ValueError(\"name is required\")\n    if len(admin[\"name\"]) < 8:\n        raise ValueError(\"name is too short\")\n    return save(admin)\n",
+  "command": "towel preview . --progress none",
+  "seconds": 3.4,
+  "output": "Would apply 1 refactoring(s).\nTermination: fixed_point\n--- before/accounts.py\n+++ after/accounts.py\n@@ -1,16 +1,16 @@\n+def __extracted_func_0(__param_0, __param_1):\n+    if not __param_0.get(\"name\"):\n+        raise ValueError(\"name is required\")\n+    if len(__param_0[\"name\"]) < __param_1:\n+        raise ValueError(\"name is too short\")\n+    return save(__param_0)\n+\n+\n def register_user(form):\n     user = dict(form)\n-    if not user.get(\"name\"):\n-        raise ValueError(\"name is required\")\n-    if len(user[\"name\"]) < 2:\n-        raise ValueError(\"name is too short\")\n-    return save(user)\n+    return __extracted_func_0(user, 2)\n \n \n def register_admin(form):\n     admin = dict(form, role=\"admin\")\n-    if not admin.get(\"name\"):\n-        raise ValueError(\"name is required\")\n-    if len(admin[\"name\"]) < 8:\n-        raise ValueError(\"name is too short\")\n-    return save(admin)\n+    return __extracted_func_0(admin, 8)\nInput files were not changed.\n"
+}
