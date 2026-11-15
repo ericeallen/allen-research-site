@@ -66,8 +66,8 @@ HOME_INTRO: Final[tuple[Prose, ...]] = (
         "background is in type systems, logic, and formal methods, applied to "
         "everything from knowledge representation to programming languages, proof "
         "assistants, reinforcement learning, and natural language processing. "
-        "Since 2011 much of my work has been in machine learning, and the "
-        "questions that motivate me are where it meets logic.",
+        "Since 2011 much of my work has been in machine learning, especially deep "
+        "learning, and the questions that motivate me are where it meets logic.",
     ),
 )
 
