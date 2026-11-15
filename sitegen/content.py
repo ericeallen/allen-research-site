@@ -40,7 +40,7 @@ SITE: Final = Site(
     tagline="AI and Logic",
     description=(
         "Eric Allen is a Quantitative Engineer on the AI Innovation Team at Two Sigma. "
-        "His background is in logic, type systems, and formal methods."
+        "His background is in type systems, logic, and formal methods."
     ),
     email="eric@allen-research.com",
     location="New York",
@@ -63,7 +63,7 @@ TOWEL_REPO_URL: Final = "https://github.com/ericeallen/towel"
 HOME_INTRO: Final[tuple[Prose, ...]] = (
     (
         "I am a Quantitative Engineer on the AI Innovation Team at Two Sigma. My "
-        "background is in logic, type systems, and formal methods, applied to "
+        "background is in type systems, logic, and formal methods, applied to "
         "everything from expert systems to programming languages, proof "
         "assistants, and natural language processing. Since 2011 most of my work "
         "has been in machine learning, and the questions that motivate me are "
