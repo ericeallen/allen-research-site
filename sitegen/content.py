@@ -64,7 +64,7 @@ HOME_INTRO: Final[tuple[Prose, ...]] = (
     (
         "I am a Quantitative Engineer on the AI Innovation Team at Two Sigma. My "
         "background is in type systems, logic, and formal methods, applied to "
-        "everything from expert systems to programming languages, proof "
+        "everything from knowledge representation to programming languages, proof "
         "assistants, and natural language processing. Since 2011 most of my work "
         "has been in machine learning, and the questions that motivate me are "
         "where it meets logic.",
