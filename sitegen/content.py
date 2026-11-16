@@ -86,8 +86,9 @@ HOME_HISTORY: Final[tuple[Prose, ...]] = (
     ),
     (
         "My PhD in computer science is from Rice University, where I worked with "
-        "Robert Cartwright on generic types for Java. My bachelor's degrees, in "
-        "mathematics and in computer science, are from Cornell.",
+        "Robert Cartwright on generic types for Java. My bachelor's degree is from "
+        "Cornell, a double major in computer science and mathematics with a "
+        "concentration in cognitive studies.",
     ),
 )
 
@@ -884,10 +885,15 @@ EDUCATION: Final[tuple[Degree, ...]] = (
     ),
     Degree(
         "Cornell University",
-        "Bachelor's degrees in Mathematics and in Computer Science",
+        "Bachelor's degree, Computer Science and Mathematics",
         1993,
         1996,
-        ("Cornell College Scholar. Concentration in cognitive studies.",),
+        (
+            "Double major, with a concentration in cognitive studies, as a Cornell "
+            "College Scholar, a program that waives all breadth requirements. Senior "
+            "thesis: “Thinking about Thinking”, on the properties any intelligent "
+            "system must have, whether biological, artificial, or extraterrestrial.",
+        ),
     ),
 )
 
