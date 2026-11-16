@@ -890,10 +890,9 @@ EDUCATION: Final[tuple[Degree, ...]] = (
         1996,
         (
             "Double major, with a concentration in cognitive studies, as a Cornell "
-            "College Scholar. The program waives all breadth requirements and requires "
-            "a senior thesis. Mine was “Thinking about Thinking”, on the properties "
-            "any intelligent system must have, whether biological, artificial, or "
-            "extraterrestrial.",
+            "College Scholar. The program requires a senior thesis. Mine was “Thinking "
+            "about Thinking”, on the properties any intelligent system must have, "
+            "whether biological, artificial, or extraterrestrial.",
         ),
     ),
 )
