@@ -43,7 +43,6 @@ SITE: Final = Site(
         "His background is in type systems, logic, and formal methods."
     ),
     email="eric@allen-research.com",
-    location="New York",
     profiles=(
         Profile("GitHub", "https://github.com/ericeallen"),
         Profile("Google Scholar", "https://scholar.google.com/citations?user=OY3oJzoAAAAJ"),

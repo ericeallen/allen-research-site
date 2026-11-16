@@ -164,7 +164,6 @@ class Site:
     tagline: str
     description: str
     email: str
-    location: str
     profiles: tuple[Profile, ...]
     blog_url: str | None
     """None until the blog is live; the navigation shows it only when set."""
