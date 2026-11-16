@@ -519,7 +519,7 @@ def render(page: Page, pages: tuple[Page, ...]) -> str:
         '<footer class="site-footer">\n'
         f"<p>{text(site.author)} · {text(site.location)}</p>\n"
         f"{_link_row(contact, page.root)}\n"
-        "<p>The views expressed on this site are my own and not those of my employer.</p>\n"
+        "<p>The views expressed on this site are my own.</p>\n"
         "</footer>\n"
         "</body>\n"
         "</html>\n"
